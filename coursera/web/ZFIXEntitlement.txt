@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ZFIX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="zfix.xsd">
+  <Origin>COMMUNITYBANK</Origin>
+  <Destination>ZENITH</Destination>
+  <TransmissionTimeStamp>2014-06-19T13:59:41.9725824-07:00</TransmissionTimeStamp>
+  <Entitlements>
+    <Entitlement>
+      <Customer>000</Customer>
+      <Client>0232</Client>
+      <AcctId>934837482</AcctId>
+      <AcctType>SDA</AcctType>
+      <Products>
+        <Product>
+          <ProductIdentifier>BXFER</ProductIdentifier>
+        </Product>
+      </Products>
+    </Entitlement>
+    <Entitlement>
+      <Customer>000</Customer>
+      <Client>0232</Client>
+      <AcctId>934837481</AcctId>
+      <AcctType>DDA</AcctType>
+      <Products>
+        <Product>
+          <ProductIdentifier>ACH</ProductIdentifier>
+        </Product>
+        <Product>
+          <ProductIdentifier>WIRE</ProductIdentifier>
+        </Product>
+      </Products>
+    </Entitlement>
+  </Entitlements>
+</ZFIX> 

@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     	Revision: ZFIX.XSD
+     	Date: March 2014
+     	Zenith Financial Information Exchange XSD
+     	Copyright 2014 Zenith Information Systems. All rights reserved.
+
+Notes:
+  Character Fields
+    Fields that represent descriptions are not restricted in length for the purposes of an xml file.
+    However it is acknowledged that some description fields may need to be truncated by the receiver
+    of the file in order to conform with other system requirements. Truncation should be done passively
+    with raising errors.
+
+  xml2Code
+    Using xml2code to generate classes, /xa should be used.
+      /xa - Generate xml attributes
+
+Changes:
+  06/19/2014
+    TransmissionTimeStamp is now required and its type is xs:dateTime.
+    Changed CheckIssuance element  to contain mutiple CheckIssuanceTransactions.
+    Changed Memo to character type.
+    Changed SecurityCode to character type.
+
+  06/23/2014
+    Changed AchBatch Max occurances to unbound.
+    Changed Xfer Transactions Max occurances to unbound.
+    Changed Wire Transactions Max occurances to unbound.
+    
+  07/08/14
+    Added ConfirmationReference to TransactionStatus
+      This can be used to return Federal Wire reference, etc.
+
+  07/09/14
+    Added Entitlements definition.
+    
+  08/06/14
+    The IndividualIDNumber was not defined as IndividualIDNumber_Type.
+    
+  08/11/14
+    TransactionNumber added to ACH records.
+    
+  09/15/14
+    The CheckIssuance PayerInfo conatained a element PostAddr which was allowed four lines a free form address.
+    PostAddr has been renamed AddressLine in the CheckIssuance PayerInfo so it is not confused with PostAddr_Type.
+    
+  12/30/15
+    Added CompanyIdentification to ACHBatchHeader
+
+  01/04/16
+    TransactionNumber added to Wire records.
+    
+  01/12/16
+    MessageType added to TransactionStatus. It is manditory and must be SUCCESS, ERROR, WARNING, or INFORMATION.
+
+  01/12/16
+    StatusSeverity is now deprecated.
+-->
+
+<xs:schema id="ZTX1" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="ZFIX" type="ZFIX_Type"/>
+
+  <xs:complexType name="ZFIX_Type">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:element name="Origin" type="CHAR"  />
+      <xs:element name="Destination" type="CHAR" />
+      <xs:element name="TransmissionTimeStamp" type="xs:dateTime" />
+
+      <xs:choice minOccurs="1" >
+        <xs:element ref="Request" />
+        <xs:element ref="Response" />
+        <xs:element ref="Entitlements" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Request" type="Request_Type" />
+  <xs:complexType name="Request_Type">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:choice minOccurs="1" >
+        <xs:element ref="ACH" />
+        <xs:element ref="Xfer" />
+        <xs:element ref="Wire" />
+        <xs:element ref="CheckIssuance" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Response" type="Response_Type" />
+  <xs:complexType name="Response_Type">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:choice minOccurs="1" >
+        <xs:annotation>
+          <xs:documentation>The response should echo back the transactions from the request.</xs:documentation>
+        </xs:annotation>
+        <xs:element ref="ACH" />
+        <xs:element ref="Xfer" />
+        <xs:element ref="Wire" />
+        <xs:element ref="CheckIssuance" />
+      </xs:choice>
+      <xs:element ref="StatusInfo" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Entitlements" type="Entitlements_Type" />
+  <xs:complexType name="Entitlements_Type">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="Entitlement" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Entitlement" type="Entitlement_Type" />
+  <xs:complexType name="Entitlement_Type">
+    <xs:sequence>
+
+      <xs:element name="Customer" type="NC" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Client" type="NC" minOccurs="0" maxOccurs="1"/>
+      
+      <xs:element ref="AcctId" minOccurs="1" maxOccurs="1" />
+      <xs:element ref="AcctType" minOccurs="0" maxOccurs="1" />
+      <xs:element ref="BankInfo" minOccurs="0" maxOccurs="1" />
+      <xs:element ref="AchID" minOccurs="0" maxOccurs="1" />
+
+      <xs:element name="Products" minOccurs="0" maxOccurs="1" >
+        <xs:complexType>
+          <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element ref="Product" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Products" type="Products_Type" />
+  <xs:complexType name="Products_Type">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="Product" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="Product" type="Product_Type" />
+  <xs:complexType name="Product_Type">
+    <xs:sequence>
+      <xs:element name="Effective" type="xs:dateTime" minOccurs="0" />
+      <xs:element name="Authorized" type="xs:boolean" minOccurs="0" />
+      <xs:element ref="ProductIdentifier" />
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:element name="StatusInfo" type="StatusInfo_Type" />
+  <xs:complexType name="StatusInfo_Type">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="TransactionStatus" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="TransactionStatus" type="TransactionStatus_Type" />
+  <xs:complexType name="TransactionStatus_Type">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:element name="UID" type="UUID" minOccurs="1" maxOccurs="1" />
+      <xs:element name="BatchUID" type="UUID" minOccurs="0" maxOccurs="1" />
+      <xs:element ref="MessageType" minOccurs="1" maxOccurs="1" />
+      <xs:element name="StatusCode" type="INT" minOccurs="0" maxOccurs="1" />
+      <xs:element name="StatusMessage" type="CHAR" minOccurs="0" maxOccurs="1" />
+      <xs:element name="ConfirmationReference" type="CHAR" minOccurs="0" maxOccurs="1" />
+      <xs:element ref="StatusSeverity" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+
+  <!-- ******* ACH ******* -->
+
+  <xs:element name="ACH" type="ACH_Type" />
+
+  <xs:complexType name="ACH_Type">
+    <xs:sequence>
+      <xs:element ref="ACHBatch" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="ACHBatch" type="ACHBatch_Type" />
+  <xs:complexType name="ACHBatch_Type">
+    <xs:sequence>
+      <xs:element name="ACHBatchHeader">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ServiceClassCode" />
+            <xs:element name="CompanyName" />
+            <xs:element name="CompanyDiscretionaryData" />
+            <xs:element ref="CompanyIdentification"  />
+            <xs:element ref="EntryClassCode"  />
+            <xs:element name="CompanyEntryDescription" type="CHAR" />
+            <xs:element name="DescriptiveDate" type="Date" />
+            <xs:element name="EffectiveDate" type="Date" />
+            <xs:element name="BatchUID" type="UUID" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="PayerInfo">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="CHAR" />
+            <xs:element ref="PostAddr" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="AccountInfo" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="Transactions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ACHTransaction" minOccurs="1" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="ACHTransaction" type="ACHTransaction_Type" />
+  <xs:complexType name="ACHTransaction_Type">
+    <xs:sequence>
+      <xs:element name="UID" type="UUID" />
+      <xs:element name="Memo" type="CHAR" />
+      <xs:element name="BillingAcct" minOccurs="0" />
+      <xs:element ref="Amount" />
+      <xs:element ref="TransactionNumber" />
+      <xs:element ref="TransactionCode" />
+      <xs:element ref="RemittanceInfo" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ******* Xfer ******* -->
+
+  <xs:element name="Xfer" type="Xfer_Type" />
+
+  <xs:complexType name="Xfer_Type">
+    <xs:sequence>
+      <xs:element name="XferTransaction" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UID" type="UUID" />
+            <xs:element name="DepAcctIdFrom">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="AccountInfo" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="DepAcctIdTo">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="AccountInfo" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element ref="Amount" />
+            <xs:element name="TransactionDate" type="Date" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ******* Wire ******* -->
+
+  <xs:element name="Wire" type="Wire_Type" />
+  <xs:complexType name="Wire_Type">
+    <xs:sequence>
+      <xs:element name="WireTransaction" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UID" type="UUID" />
+            <xs:element name="PayerInfo">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Name" type="CHAR" />
+                  <xs:element ref="PostAddr" minOccurs="1" maxOccurs="1"/>
+                  <xs:element ref="AccountInfo" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="TransactionDate" type="Date" />
+            <xs:element ref="TransactionNumber" />
+            <xs:element ref="Amount" />
+            <xs:element name="Memo" type="CHAR" />
+            <xs:element ref="RemittanceInfo" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ******* CheckIssuance ******* -->
+
+  <xs:element name="CheckIssuance" type="CheckIssuance_Type" />
+  <xs:complexType name="CheckIssuance_Type">
+    <xs:sequence>
+      <xs:element name="CheckIssuanceTransaction" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UID" type="UUID" />
+            <xs:element name="PayerInfo">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Name" type="CHAR" minOccurs="1" maxOccurs="3"/>
+                  <xs:element name="CareOf" type="CHAR" minOccurs="0" maxOccurs="1"/>
+                  <xs:element name="AddressLine" type="CHAR" minOccurs="1" maxOccurs="4"/>
+                  <xs:element ref="AccountInfo" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element ref="CheckReferenceNumber"/>
+            <xs:element name="TransactionDate" type="Date" />
+            <xs:element ref="Amount" />
+            <xs:element name="Memo" type="CHAR" />
+            <xs:element name="SecurityCode" type="CHAR" />
+            <xs:element ref="PayeeInfo" />
+
+            <xs:element name="VoucherInfo" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="VoucherLine" type="CHAR" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ******* Transaction parts definitions ******* -->
+
+  <xs:element name="PayeeInfo" type="PayeeInfo_Type" />
+  <xs:complexType name="PayeeInfo_Type">
+    <xs:sequence>
+      <xs:element name="Name" type="CHAR" minOccurs="1" maxOccurs="2" />
+      <xs:element name="CareOf" type="CHAR" minOccurs="0" maxOccurs="1" />
+      <xs:element ref="IndividualIDNumber" minOccurs="0" maxOccurs="1" />
+      <xs:element ref="PostAddr" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="PostAddr" type="PostAddr_Type" />
+  <xs:complexType name="PostAddr_Type">
+    <xs:sequence>
+      <!-- Note: Bank addresses fro Wires may not have postal code or Addr2 so they are optional-->
+      <xs:element name="Addr1" type="CHAR" minOccurs="1" maxOccurs="1" />
+      <xs:element name="Addr2" type="CHAR" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="City" type="CHAR" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="StateProv" type="CHAR" minOccurs="1" maxOccurs="1"/>
+      <xs:element ref="PostalCode" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Country" type="CHAR" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="AccountInfo" type="AccountInfo_Type"/>
+  <xs:complexType name="AccountInfo_Type">
+    <xs:sequence>
+      <xs:element ref="AcctId" />
+      <xs:element ref="AcctType" />
+      <xs:element ref="BankInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="BankInfo" type="BankInfo_Type"/>
+  <xs:complexType name="BankInfo_Type">
+    <xs:sequence>
+      <xs:element ref="BankIdType" />
+      <xs:element ref="BankId" />
+      <xs:element name="Name" type="CHAR" minOccurs="0"/>
+      <xs:element ref="PostAddr" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="RemittanceInfo" type="RemittanceInfo_Type"/>
+  <xs:complexType name="RemittanceInfo_Type">
+    <xs:sequence>
+      <xs:element name="SettlementInfo">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="SettlementMethod"/>
+            <xs:element ref="PmtFormat" />
+            <xs:element ref="AccountInfo" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="PayeeInfo" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="AcctType" type="AcctType_Type"/>
+
+  <xs:element name="SettlementMethod" type="SettlementMethod_Type" />
+  <xs:simpleType name="SettlementMethod_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="ACH"/>
+      <xs:enumeration value="FEDWIRE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="EntryClassCode" type="PmtFormat_Type" />
+  <xs:element name="PmtFormat" type="PmtFormat_Type" />
+
+  <xs:simpleType name="PmtFormat_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="PPD">
+        <xs:annotation>
+          <xs:documentation>Preauthorized Payments or withdrawals to individual accounts (not companies) - i.e. Direct Payroll/Insurance Premiums</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CCD">
+        <xs:annotation>
+          <xs:documentation>Payments between two companies - Cash Concentration or Disbursement Transactions</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="IndividualIDNumber"  type="IndividualIDNumber_Type"/>
+  <xs:simpleType name="IndividualIDNumber_Type"  >
+    <xs:annotation>
+      <xs:documentation>Individual Identification Number as used in ACH entry records</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="CHAR"/>
+  </xs:simpleType>
+
+  <xs:element name="AcctId" type="AcctId_Type"/>
+  <xs:simpleType name="AcctId_Type">
+    <xs:restriction base="NC">
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="CompanyIdentification" type="CompanyIdentification_Type"/>
+  <xs:simpleType name="CompanyIdentification_Type">
+    <xs:restriction base="NC">
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="AchID" type="AchID_Type"/>
+  <xs:simpleType name="AchID_Type">
+    <xs:restriction base="NC">
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:simpleType name="AcctType_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="DDA">
+        <xs:annotation>
+          <xs:documentation>Checking Account</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SDA">
+        <xs:annotation>
+          <xs:documentation>Savings Account</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="ProductIdentifier" type="ProductIdentifier_Type"/>
+  <xs:simpleType name="ProductIdentifier_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="ACH">
+        <xs:annotation>
+          <xs:documentation>ACH Transaction</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WIRE">
+        <xs:annotation>
+          <xs:documentation>Wire Transaction</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BXFER">
+        <xs:annotation>
+          <xs:documentation>Book Transsfer</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+  <xs:element name="ServiceClassCode" />
+  <xs:simpleType name="ServiceClassCode_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="200">
+        <xs:annotation>
+          <xs:documentation>Mixed-ACH Debits and Credits</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="220">
+        <xs:annotation>
+          <xs:documentation>Credits-ACH Credits only (transfers from the account of the company)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="225">
+        <xs:annotation>
+          <xs:documentation>Debits-ACH Debits only (transfers to the account of the company)</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="280">
+        <xs:annotation>
+          <xs:documentation>ACH Automated Account Advice</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+
+
+
+
+
+
+  <xs:element name="TransactionCode" type="TransactionCode_Type" />
+  <xs:simpleType name="TransactionCode_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="22">
+        <xs:annotation>
+          <xs:documentation>Automated Deposit or Credit to a checking account.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="23">
+        <xs:annotation>
+          <xs:documentation>Prenote-Automated Deposit or Credit to a checking account.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="27">
+        <xs:annotation>
+          <xs:documentation>Automated Payment or withdrawal to a checking account</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="28">
+        <xs:annotation>
+          <xs:documentation>Prenote-Automated Payment or withdrawal to a checking account</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="32">
+        <xs:annotation>
+          <xs:documentation>Automated Deposit or Credit to a savings account.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="33">
+        <xs:annotation>
+          <xs:documentation>Prenote-Automated Deposit or Credit to a savings account.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="37">
+        <xs:annotation>
+          <xs:documentation>Automated Payment or withdrawal to a savings account.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="38">
+        <xs:annotation>
+          <xs:documentation>Prenote-Automated Payment or withdrawal to a savings account</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+  <xs:element name="BankIdType" type="BankIdType_Type" />
+  <xs:simpleType name="BankIdType_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="ABA"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="BankId" type="BankId_Type" />
+  <xs:simpleType name="BankId_Type">
+    <xs:restriction base="NC">
+      <xs:maxLength value="34"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="PostalCode" type="PostalCode_Type"/>
+  <xs:simpleType name="PostalCode_Type">
+    <xs:restriction base="CHAR">
+      <xs:maxLength value="11"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:element name="StatusSeverity" type="StatusSeverity_Type" />
+  <xs:simpleType name="StatusSeverity_Type">
+    <xs:restriction base="NC">
+      <xs:enumeration value="N">
+        <xs:annotation>
+          <xs:documentation>Normal</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="I">
+        <xs:annotation>
+          <xs:documentation>Informational.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="W">
+        <xs:annotation>
+          <xs:documentation>Warning</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="E">
+        <xs:annotation>
+          <xs:documentation>Error</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <xs:element name="MessageType" type="MessageType_Type" />
+  <xs:simpleType name="MessageType_Type">
+    <xs:restriction base="NC">
+
+      <xs:enumeration value="SUCCESS">
+        <xs:annotation>
+          <xs:documentation>Success. Final status update. Processing of the transaction is complete.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="ERROR">
+        <xs:annotation>
+          <xs:documentation>Error. Final status update. The transaction could not be proccessed.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="WARNING">
+        <xs:annotation>
+          <xs:documentation>Warning. Interim status update. A status code or message should be supplied.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="INFORMATION">
+        <xs:annotation>
+          <xs:documentation>Information. Interim status update. A status code or message should be supplied.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+
+  <xs:element name="Amount" type="xs:decimal" />
+  <xs:simpleType name="Amount_Type">
+    <xs:restriction base="xs:decimal"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="Date">
+    <xs:restriction base="xs:date"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="CHAR">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="INT">
+    <xs:restriction base="xs:integer"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="NC">
+    <xs:annotation>
+      <xs:documentation>Elements of type Narrow Character are elements of character data type with the additional restriction that the only allowable characters are those contained within the ISO Latin-1 character set.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="UUID">
+    <xs:annotation>
+      <xs:documentation>UUID elements are Narrow Character with a maximum length of 36.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="NC">
+      <xs:maxLength value="36"/>
+      <xs:pattern value="([0-9]|[a-f]|[A-F]){8}(-([0-9]|[a-f]|[A-F]){4})(-([0-9]|[a-f]|[A-F]){4})(-([0-9]|[a-f]|[A-F]){4})(-([0-9]|[a-f]|[A-F]){12})"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="CheckReferenceNumber" type="CheckReferenceType"/>
+  <xs:simpleType name="CheckReferenceType">
+    <xs:annotation>
+      <xs:documentation>Check Reference elements are Narrow Character with a maximum length of 12.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="NC">
+      <xs:maxLength value="12"/>
+      <xs:minLength value="1"/>
+      <xs:pattern value="[0-9]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="TransactionNumber" type="TransactionNumber_Type"/>
+  <xs:simpleType name="TransactionNumber_Type">
+    <xs:annotation>
+      <xs:documentation>Check Reference elements are Narrow Character with a maximum length of 12.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="NC">
+      <xs:maxLength value="20"/>
+      <xs:minLength value="0"/>
+      <xs:pattern value="[0-9]{3}-[0-9]{4}-[ A-Z]{3}[ 0-9]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

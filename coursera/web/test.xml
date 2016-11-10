@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ZFIX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Origin>ZENITH</Origin>
+  <Destination>TESTBANK</Destination>
+  <TransmissionTimeStamp>2016-01-11T14:16:26.0696993-08:00</TransmissionTimeStamp>
+  <Request>
+    <ACH>
+      <ACHBatch>
+        <ACHBatchHeader>
+          <ServiceClassCode xsi:type="xsd:string">220</ServiceClassCode>
+          <CompanyName xsi:type="xsd:string">ZFIX TEST CLIENT</CompanyName>
+          <CompanyDiscretionaryData xsi:type="xsd:string">000-0232 ACH</CompanyDiscretionaryData>
+          <EntryClassCode>CCD</EntryClassCode>
+          <CompanyEntryDescription>ACHCredit</CompanyEntryDescription>
+          <DescriptiveDate>2016-01-12</DescriptiveDate>
+          <EffectiveDate>2016-01-12</EffectiveDate>
+          <BatchUID>E6062AEF-11E5-B86D-D3A0-D493544805C1</BatchUID>
+        </ACHBatchHeader>
+        <PayerInfo>
+          <Name>ZFIX TEST CLIENT</Name>
+          <PostAddr>
+            <Addr1>9999 SUNSET BLVD., STE. 999</Addr1>
+            <Addr2>THIS ADDRESS LINE TWO</Addr2>
+            <City>LOS ANGELES</City>
+            <StateProv>CA</StateProv>
+            <PostalCode>90069-1234</PostalCode>
+            <Country>USA</Country>
+          </PostAddr>
+          <AccountInfo>
+            <AcctId>934837482</AcctId>
+            <AcctType>DDA</AcctType>
+            <BankInfo>
+              <BankIdType>ABA</BankIdType>
+              <BankId>322271627</BankId>
+              <Name>ZFIX TEST BANK</Name>
+              <PostAddr>
+                <Addr1>123 TEST STREET</Addr1>
+                <City />
+                <StateProv />
+                <PostalCode />
+                <Country />
+              </PostAddr>
+            </BankInfo>
+          </AccountInfo>
+        </PayerInfo>
+        <Transactions>
+          <ACHTransaction>
+            <UID>E6062AEF-11E5-B86D-D3A0-D493544805C1</UID>
+            <Memo />
+            <Amount>123.00</Amount>
+            <TransactionNumber>000-0232-ACH      29</TransactionNumber>
+            <TransactionCode>22</TransactionCode>
+            <RemittanceInfo>
+              <SettlementInfo>
+                <SettlementMethod>ACH</SettlementMethod>
+                <PmtFormat>CCD</PmtFormat>
+                <AccountInfo>
+                  <AcctId>45345934853</AcctId>
+                  <AcctType>DDA</AcctType>
+                  <BankInfo>
+                    <BankIdType>ABA</BankIdType>
+                    <BankId>322271627</BankId>
+                    <Name>J.P. MORGAN CHASE BANK, N.A.</Name>
+                    <PostAddr>
+                      <Addr1>10430 HIGHLAND MANOR DRIVE</Addr1>
+                      <City>TAMPA</City>
+                      <StateProv>FL</StateProv>
+                      <PostalCode>33610</PostalCode>
+                      <Country>USA</Country>
+                    </PostAddr>
+                  </BankInfo>
+                </AccountInfo>
+              </SettlementInfo>
+              <PayeeInfo>
+                <Name>BASS, RALPH</Name>
+                <CareOf />
+                <IndividualIDNumber>000-00445-710</IndividualIDNumber>
+                <PostAddr>
+                  <Addr1>5000 LONG STREET</Addr1>
+                  <Addr2 />
+                  <City>LOS ANGELES</City>
+                  <StateProv>CA</StateProv>
+                  <PostalCode>90049</PostalCode>
+                  <Country>USA</Country>
+                </PostAddr>
+              </PayeeInfo>
+            </RemittanceInfo>
+          </ACHTransaction>
+          <ACHTransaction>
+            <UID>E6062AF0-11E5-B86D-D3A0-D493544805C1</UID>
+            <Memo>THIS IS A MEMO LINE</Memo>
+            <Amount>123.00</Amount>
+            <TransactionNumber>000-0232-ACH      31</TransactionNumber>
+            <TransactionCode>22</TransactionCode>
+            <RemittanceInfo>
+              <SettlementInfo>
+                <SettlementMethod>ACH</SettlementMethod>
+                <PmtFormat>CCD</PmtFormat>
+                <AccountInfo>
+                  <AcctId>45345934853</AcctId>
+                  <AcctType>DDA</AcctType>
+                  <BankInfo>
+                    <BankIdType>ABA</BankIdType>
+                    <BankId>322271627</BankId>
+                    <Name>J.P. MORGAN CHASE BANK, N.A.</Name>
+                    <PostAddr>
+                      <Addr1>10430 HIGHLAND MANOR DRIVE</Addr1>
+                      <City>TAMPA</City>
+                      <StateProv>FL</StateProv>
+                      <PostalCode>33610</PostalCode>
+                      <Country>USA</Country>
+                    </PostAddr>
+                  </BankInfo>
+                </AccountInfo>
+              </SettlementInfo>
+              <PayeeInfo>
+                <Name>BASS, RALPH</Name>
+                <CareOf />
+                <IndividualIDNumber>000-00445-710</IndividualIDNumber>
+                <PostAddr>
+                  <Addr1>5000 LONG STREET</Addr1>
+                  <Addr2 />
+                  <City>LOS ANGELES</City>
+                  <StateProv>CA</StateProv>
+                  <PostalCode>90049</PostalCode>
+                  <Country>USA</Country>
+                </PostAddr>
+              </PayeeInfo>
+            </RemittanceInfo>
+          </ACHTransaction>
+        </Transactions>
+      </ACHBatch>
+      <ACHBatch>
+        <ACHBatchHeader>
+          <ServiceClassCode xsi:type="xsd:string">220</ServiceClassCode>
+          <CompanyName xsi:type="xsd:string">ZFIX TEST CLIENT</CompanyName>
+          <CompanyDiscretionaryData xsi:type="xsd:string">000-0232 ACH</CompanyDiscretionaryData>
+          <EntryClassCode>PPD</EntryClassCode>
+          <CompanyEntryDescription>ACHCredit</CompanyEntryDescription>
+          <DescriptiveDate>2016-01-12</DescriptiveDate>
+          <EffectiveDate>2016-01-12</EffectiveDate>
+          <BatchUID>E6062AEF-11E5-B86D-D3A0-D593544805C1</BatchUID>
+        </ACHBatchHeader>
+        <PayerInfo>
+          <Name>ZFIX TEST CLIENT</Name>
+          <PostAddr>
+            <Addr1>9999 SUNSET BLVD., STE. 999</Addr1>
+            <Addr2>THIS ADDRESS LINE TWO</Addr2>
+            <City>LOS ANGELES</City>
+            <StateProv>CA</StateProv>
+            <PostalCode>90069-1234</PostalCode>
+            <Country>USA</Country>
+          </PostAddr>
+          <AccountInfo>
+            <AcctId>934837482</AcctId>
+            <AcctType>DDA</AcctType>
+            <BankInfo>
+              <BankIdType>ABA</BankIdType>
+              <BankId>322271627</BankId>
+              <Name>ZFIX TEST BANK</Name>
+              <PostAddr>
+                <Addr1>123 TEST STREET</Addr1>
+                <City />
+                <StateProv />
+                <PostalCode />
+                <Country />
+              </PostAddr>
+            </BankInfo>
+          </AccountInfo>
+        </PayerInfo>
+        <Transactions>
+          <ACHTransaction>
+            <UID>E6062AEF-11E5-B86D-D3A0-D593544805C1</UID>
+            <Memo>THIS IS A MEMO LINE Vendor Invoice: 1234</Memo>
+            <Amount>123.00</Amount>
+            <TransactionNumber>000-0232-ACH      30</TransactionNumber>
+            <TransactionCode>22</TransactionCode>
+            <RemittanceInfo>
+              <SettlementInfo>
+                <SettlementMethod>ACH</SettlementMethod>
+                <PmtFormat>PPD</PmtFormat>
+                <AccountInfo>
+                  <AcctId>758475348</AcctId>
+                  <AcctType>DDA</AcctType>
+                  <BankInfo>
+                    <BankIdType>ABA</BankIdType>
+                    <BankId>122000661</BankId>
+                    <Name>BANK OF AMERICA, N.A.</Name>
+                    <PostAddr>
+                      <Addr1>PO BOX 27025</Addr1>
+                      <City>RICHMOND</City>
+                      <StateProv>VA</StateProv>
+                      <PostalCode>23261-7025</PostalCode>
+                      <Country>USA</Country>
+                    </PostAddr>
+                  </BankInfo>
+                </AccountInfo>
+              </SettlementInfo>
+              <PayeeInfo>
+                <Name>ARLO GUTHRIE</Name>
+                <CareOf />
+                <IndividualIDNumber>000-00247-710</IndividualIDNumber>
+                <PostAddr>
+                  <Addr1>123 ROLLING BLUNDER AVE</Addr1>
+                  <Addr2 />
+                  <City>STOCKTON</City>
+                  <StateProv>MA</StateProv>
+                  <PostalCode>34342</PostalCode>
+                  <Country>USA</Country>
+                </PostAddr>
+              </PayeeInfo>
+            </RemittanceInfo>
+          </ACHTransaction>
+        </Transactions>
+      </ACHBatch>
+    </ACH>
+  </Request>
+</ZFIX>
