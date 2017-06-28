@@ -23,15 +23,12 @@ def load_file():
 
 def openfile():
     ynewfile = str(xnewfile[0])
-    print (ynewfile,"here")
     os.startfile(ynewfile)
 
 
 
 def dedupe():
     yname = str(xname[0])
-    print (str(xname[0]))
-    print ('test')
     reader=csv.reader(open(yname, 'r'), delimiter=',')
     writer=csv.writer(open(yname+'_NoDupes.csv', 'w', newline=''), delimiter=',')
     entries = set()
