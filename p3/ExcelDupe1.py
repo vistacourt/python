@@ -1,9 +1,13 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror
+import csv
+import os
 
 
 class MyFrame(Frame):
+
+    
     def __init__(self):
         Frame.__init__(self)
         self.master.title("CSV Deduplication")
@@ -11,7 +15,7 @@ class MyFrame(Frame):
         self.master.columnconfigure(5, weight=1)
         self.master.minsize(width=700, height=100)
         self.grid(sticky=W+E+N+S)
-
+        self.fname = ''
 
 
         self.label0 = Label(self)
@@ -30,25 +34,29 @@ class MyFrame(Frame):
 
 
     def load_file(self):
-        fname = askopenfilename(filetypes=(("CSV files", "*.csv"),
-                                           ("All files", "*.*") ))
-                                           
+##        fname = askopenfilename(filetypes=(("CSV files", "*.csv"),
+##                                           ("All files", "*.*") ))
+        fname = 'x'                               
         label2 = Label(text=fname, width=50)
         label2.grid(row=0, column=4, columnspan=2, sticky=W)                              
-##                                 
-##        if fname:
-##            try:
-##                print (fname)
-##                
-##            except:                
-##                showerror("Open Source File", "Failed to read file\n'%s'" % fname)
-##            return
+        print (fname)
         return fname
 
 
     def dedupe(fname):
         print (fname)
         print ('test')
+##        reader=csv.reader(open(fname, 'rb'), delimiter=',')
+##        writer=csv.writer(open('result.csv', 'w'), delimiter=',')
+##        entries = set()
+##
+##        for row in reader:
+##           key = (row[0], row[1]) # instead of just the last name
+##
+##           if key not in entries:
+##              writer.writerow(row)
+##              entries.add(key)
+
 
 
 if __name__ == "__main__":
